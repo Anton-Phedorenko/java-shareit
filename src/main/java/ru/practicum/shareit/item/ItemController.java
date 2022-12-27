@@ -6,7 +6,6 @@ import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.service.ItemServiceImpl;
 
 import javax.validation.Valid;
-import javax.websocket.server.PathParam;
 import java.util.List;
 
 /**
@@ -39,11 +38,12 @@ public class ItemController {
     }
 
     @GetMapping
-    public List<ItemDto> findAll(@RequestHeader(value = "X-SHARER-USER-ID")Long ownerId) {
+    public List<ItemDto> findAll(@RequestHeader(value = "X-SHARER-USER-ID") Long ownerId) {
         return itemService.findAll(ownerId);
     }
+
     @GetMapping("/search")
-    public List<ItemDto>findByText(@RequestParam String text,@RequestHeader(value = "X-SHARER-USER-ID")Long ownerId){
-        return itemService.findByText(text,ownerId);
+    public List<ItemDto> findByText(@RequestParam String text, @RequestHeader(value = "X-SHARER-USER-ID") Long ownerId) {
+        return itemService.findByText(text, ownerId);
     }
 }

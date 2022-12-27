@@ -6,6 +6,5 @@ import ru.practicum.shareit.user.dto.UserDto;
 import java.util.Optional;
 
 public interface UserService extends UserDao {
-    Optional<UserDto>findUserByEmail(String email);
-
+    Optional<UserDto> findUserByEmail(String email);
 }

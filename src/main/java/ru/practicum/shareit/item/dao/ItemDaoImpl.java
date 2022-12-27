@@ -56,7 +56,7 @@ public class ItemDaoImpl implements ItemDao {
         if (!text.isEmpty())
             return items.values().stream()
                     .filter(i -> (i.getName() + i.getDescription()).trim().toLowerCase().contains(text))
-                    .filter(i->i.getAvailable().equals(true)).collect(Collectors.toList());
+                    .filter(i -> i.getAvailable().equals(true)).collect(Collectors.toList());
         else return Collections.emptyList();
     }
 }

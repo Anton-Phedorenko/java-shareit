@@ -5,10 +5,14 @@ import ru.practicum.shareit.user.dto.UserDto;
 
 import java.util.List;
 
-public interface UserDao{
+public interface UserDao {
     UserDto create(User user);
-    UserDto update(User user,Long id);
+
+    UserDto update(User user, Long id);
+
     void delete(Long id);
+
     UserDto findById(Long id);
+
     List<UserDto> findAll();
 }
