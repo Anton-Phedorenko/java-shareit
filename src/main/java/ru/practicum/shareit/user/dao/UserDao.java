@@ -4,6 +4,7 @@ import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.dto.UserDto;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface UserDao {
     UserDto create(User user);
@@ -12,7 +13,7 @@ public interface UserDao {
 
     void delete(Long id);
 
-    UserDto findById(Long id);
+    Optional<UserDto> findById(Long id);
 
     List<UserDto> findAll();
 }

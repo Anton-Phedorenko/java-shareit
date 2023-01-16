@@ -8,6 +8,7 @@ import ru.practicum.shareit.user.model.User;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Repository
@@ -40,8 +41,8 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public UserDto findById(Long id) {
-        return id < 1 || id == null ? null : users.get(id);
+    public Optional<UserDto> findById(Long id) {
+        return id < 1 || id == null ? null : users.values().stream().filter(u->u.getId().equals(id)).findFirst();
     }
 
     @Override

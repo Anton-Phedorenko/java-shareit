@@ -20,15 +20,13 @@ public class ItemServiceImpl implements ItemService {
         this.userDao = userDao;
     }
 
-    @Override
     public ItemDto create(Item item) {
         valid(item);
         return itemDao.create(item);
     }
 
-    @Override
     public ItemDto update(Item item, Long id) {
-        ItemDto updateItem = itemDao.findById(id);
+        ItemDto updateItem = itemDao.findById(id).get();
         if (item.getOwnerId() == null || item.getOwnerId() < 0)
             throw new BadRequestException("Нельзя определить владельца вещи");
         if (!item.getOwnerId().equals(updateItem.getOwnerId()))
@@ -37,18 +35,15 @@ public class ItemServiceImpl implements ItemService {
         return itemDao.update(item, id);
     }
 
-    @Override
     public void delete(Long id) {
         itemDao.delete(id);
     }
 
-    @Override
     public ItemDto findById(Long id) {
         if (id < 0 || id == null) throw new RuntimeException();
-        return itemDao.findById(id);
+        return itemDao.findById(id).orElseThrow(()->new NotFoundException("Вещь не может быть найдена"));
     }
 
-    @Override
     public List<ItemDto> findAll(Long ownerId) {
         return itemDao.findAll(ownerId);
     }
