@@ -38,7 +38,7 @@ public class UserServiceImpl implements UserService {
     }
 
     public UserDto findById(Long id) {
-        return userDao.findById(id).orElseThrow(()-> new NotFoundException("Пользователь не найден"));
+        return userDao.findById(id).orElseThrow(() -> new NotFoundException("Пользователь не найден"));
     }
 
     public List<UserDto> findAll() {
