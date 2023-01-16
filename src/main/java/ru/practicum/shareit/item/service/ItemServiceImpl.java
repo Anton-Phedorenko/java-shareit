@@ -41,7 +41,7 @@ public class ItemServiceImpl implements ItemService {
 
     public ItemDto findById(Long id) {
         if (id < 0 || id == null) throw new RuntimeException();
-        return itemDao.findById(id).orElseThrow(()->new NotFoundException("Вещь не может быть найдена"));
+        return itemDao.findById(id).orElseThrow(() -> new NotFoundException("Вещь не может быть найдена"));
     }
 
     public List<ItemDto> findAll(Long ownerId) {

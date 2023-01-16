@@ -40,7 +40,7 @@ public class ItemDaoImpl implements ItemDao {
 
     @Override
     public Optional<ItemDto> findById(Long id) {
-        return items.values().stream().filter(i->i.getId().equals(id)).findFirst();
+        return items.values().stream().filter(i -> i.getId().equals(id)).findFirst();
     }
 
     @Override
@@ -52,7 +52,10 @@ public class ItemDaoImpl implements ItemDao {
     public List<ItemDto> findByText(String text, Long ownerId) {
         if (!text.isEmpty())
             return items.values().stream()
-                    .filter(i -> {return (i.getName() + i.getDescription()).trim().toLowerCase().contains(text);})
+                    .filter(i -> {
+                        String prepare = (i.getName() + i.getDescription()).trim().toLowerCase();
+                        return prepare.contains(text);
+                    })
                     .filter(i -> i.getAvailable().equals(true)).collect(Collectors.toList());
         else return Collections.emptyList();
     }
