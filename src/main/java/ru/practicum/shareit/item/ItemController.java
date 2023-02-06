@@ -35,7 +35,7 @@ public class ItemController {
 
     @GetMapping("/{id}")
     public ItemDto findById(@PathVariable Long id) {
-        if(id<0||id==null) throw new BadRequestException("Некорректный id");
+        if (id < 0 || id == null) throw new BadRequestException("Некорректный id");
         return itemService.findById(id);
     }
 

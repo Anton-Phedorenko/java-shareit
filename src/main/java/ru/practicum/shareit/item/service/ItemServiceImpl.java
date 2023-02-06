@@ -26,7 +26,7 @@ public class ItemServiceImpl implements ItemService {
     }
 
     public ItemDto update(Item item, Long id) {
-        ItemDto updateItem = itemDao.findById(id).orElseThrow(()->new NotFoundException("Вещь не найдена"));
+        ItemDto updateItem = itemDao.findById(id).orElseThrow(() -> new NotFoundException("Вещь не найдена"));
         if (item.getOwnerId() == null || item.getOwnerId() < 0)
             throw new BadRequestException("Нельзя определить владельца вещи");
         if (!item.getOwnerId().equals(updateItem.getOwnerId()))
