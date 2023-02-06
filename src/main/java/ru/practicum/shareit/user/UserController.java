@@ -38,7 +38,7 @@ public class UserController {
 
     @GetMapping("/{id}")
     public UserDto findUserById(@PathVariable Long id) {
-        if(id<0||id==null) throw new BadRequestException("Некорректный id");
+        if (id < 0 || id == null) throw new BadRequestException("Некорректный id");
         return userService.findById(id);
     }
 
