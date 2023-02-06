@@ -1,6 +1,7 @@
 package ru.practicum.shareit.item;
 
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.shareit.exception.BadRequestException;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.service.ItemServiceImpl;
@@ -34,6 +35,7 @@ public class ItemController {
 
     @GetMapping("/{id}")
     public ItemDto findById(@PathVariable Long id) {
+        if(id<0||id==null) throw new BadRequestException("Некорректный id");
         return itemService.findById(id);
     }
 

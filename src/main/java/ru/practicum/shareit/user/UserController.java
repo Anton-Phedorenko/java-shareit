@@ -1,6 +1,7 @@
 package ru.practicum.shareit.user;
 
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.shareit.exception.BadRequestException;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.service.UserServiceImpl;
@@ -37,6 +38,7 @@ public class UserController {
 
     @GetMapping("/{id}")
     public UserDto findUserById(@PathVariable Long id) {
+        if(id<0||id==null) throw new BadRequestException("Некорректный id");
         return userService.findById(id);
     }
 

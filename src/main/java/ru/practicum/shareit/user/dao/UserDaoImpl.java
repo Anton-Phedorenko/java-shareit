@@ -42,7 +42,7 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public Optional<UserDto> findById(Long id) {
-        return id < 1 || id == null ? null : users.values().stream().filter(u -> u.getId().equals(id)).findFirst();
+        return users.values().stream().filter(u -> u.getId().equals(id)).findFirst();
     }
 
     @Override
