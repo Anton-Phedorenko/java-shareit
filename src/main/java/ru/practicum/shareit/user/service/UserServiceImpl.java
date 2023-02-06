@@ -3,6 +3,7 @@ package ru.practicum.shareit.user.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.exception.EmailConflictException;
+import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.user.dao.UserDaoImpl;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.model.User;
@@ -19,7 +20,6 @@ public class UserServiceImpl implements UserService {
         this.userDao = userDao;
     }
 
-    @Override
     public UserDto create(User user) {
         if (findUserByEmail(user.getEmail()).isPresent())
             throw new EmailConflictException("Пользователь с таким email уже существует");
@@ -27,24 +27,20 @@ public class UserServiceImpl implements UserService {
         return userDao.create(user);
     }
 
-    @Override
     public UserDto update(User user, Long id) {
         if (findUserByEmail(user.getEmail()).isPresent())
             throw new EmailConflictException("Обновлениеи не внесет изменений");
         return userDao.update(user, id);
     }
 
-    @Override
     public void delete(Long id) {
         userDao.delete(id);
     }
 
-    @Override
     public UserDto findById(Long id) {
-        return userDao.findById(id);
+        return userDao.findById(id).orElseThrow(() -> new NotFoundException("Пользователь не найден"));
     }
 
-    @Override
     public List<UserDto> findAll() {
         return userDao.findAll();
     }

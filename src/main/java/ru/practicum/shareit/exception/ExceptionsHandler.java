@@ -8,17 +8,17 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @RestControllerAdvice
 public class ExceptionsHandler {
     @ExceptionHandler
-    public ResponseEntity<String> NotFoundHandler(NotFoundException e) {
+    public ResponseEntity<String> notFoundHandler(NotFoundException e) {
         return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler
-    public ResponseEntity<String> BadRequestHandler(BadRequestException e) {
+    public ResponseEntity<String> badRequestHandler(BadRequestException e) {
         return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler
-    public ResponseEntity<String> EmailConflictHandler(EmailConflictException e) {
+    public ResponseEntity<String> emailConflictHandler(EmailConflictException e) {
         return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
     }
 }

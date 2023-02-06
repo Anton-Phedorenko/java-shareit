@@ -5,10 +5,7 @@ import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemMapper;
 import ru.practicum.shareit.item.model.Item;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Repository
@@ -42,8 +39,8 @@ public class ItemDaoImpl implements ItemDao {
     }
 
     @Override
-    public ItemDto findById(Long id) {
-        return items.get(id);
+    public Optional<ItemDto> findById(Long id) {
+        return items.values().stream().filter(i -> i.getId().equals(id)).findFirst();
     }
 
     @Override
@@ -55,8 +52,11 @@ public class ItemDaoImpl implements ItemDao {
     public List<ItemDto> findByText(String text, Long ownerId) {
         if (!text.isEmpty())
             return items.values().stream()
-                    .filter(i -> (i.getName() + i.getDescription()).trim().toLowerCase().contains(text))
-                    .filter(i->i.getAvailable().equals(true)).collect(Collectors.toList());
+                    .filter(i -> {
+                        String prepare = (i.getName() + i.getDescription()).trim().toLowerCase();
+                        return prepare.contains(text);
+                    })
+                    .filter(i -> i.getAvailable().equals(true)).collect(Collectors.toList());
         else return Collections.emptyList();
     }
 }

@@ -1,9 +1,9 @@
 package ru.practicum.shareit.user.dao;
 
 import org.springframework.stereotype.Repository;
-import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.dto.UserMapper;
+import ru.practicum.shareit.user.model.User;
 
 import java.util.HashMap;
 import java.util.List;
@@ -41,15 +41,14 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public UserDto findById(Long id) {
-        return id < 1 || id == null ? null : users.get(id);
+    public Optional<UserDto> findById(Long id) {
+        return users.values().stream().filter(u -> u.getId().equals(id)).findFirst();
     }
 
     @Override
     public List<UserDto> findAll() {
         return users.values().stream().collect(Collectors.toList());
     }
-
 
 
     public Map<Long, UserDto> getUsers() {
