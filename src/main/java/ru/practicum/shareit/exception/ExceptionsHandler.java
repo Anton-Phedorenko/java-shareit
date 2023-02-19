@@ -4,6 +4,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import ru.practicum.shareit.exception.response.ErrorResponse;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @RestControllerAdvice
 public class ExceptionsHandler {
@@ -18,7 +22,19 @@ public class ExceptionsHandler {
     }
 
     @ExceptionHandler
+    public ResponseEntity<Map<String, String>> wrongStateHandler(WrongStateException e) {
+        Map<String, String> response = new HashMap<>();
+        response.put("error", e.getMessage());
+        return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler
     public ResponseEntity<String> emailConflictHandler(EmailConflictException e) {
         return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<String> bookingConflictHandler(BookingStatusException e) {
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
     }
 }

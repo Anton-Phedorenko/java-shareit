@@ -2,9 +2,14 @@ package ru.practicum.shareit.user.dto;
 
 import org.springframework.stereotype.Component;
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotNull;
+
 @Component
 public class UserDto {
     private Long id;
+    @NotNull
+    @Email
     private String email;
     private String name;
 
