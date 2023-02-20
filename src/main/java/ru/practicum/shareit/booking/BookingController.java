@@ -43,7 +43,6 @@ public class BookingController {
     @GetMapping("owner")
     public List<BookingDto> findByOwner(@RequestHeader("X-Sharer-User-Id") Long ownerId,
                                         @RequestParam(value = "state", defaultValue = "ALL") String state) {
-        System.out.println(132);
         return bookingService.findByOwner(ownerId, state);
     }
 

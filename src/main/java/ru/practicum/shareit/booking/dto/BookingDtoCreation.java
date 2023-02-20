@@ -16,9 +16,12 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class BookingDtoCreation {
     private Long id;
+
     @FutureOrPresent(groups = Create.class)
     private LocalDateTime start;
+
     @Future
     private LocalDateTime end;
+
     private Long itemId;
 }

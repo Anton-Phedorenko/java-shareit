@@ -20,8 +20,6 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @Override
     public User create(User user) {
-//        if (findUserByEmail(user.getEmail()).isPresent())
-//            throw new EmailConflictException("Пользователь с таким email уже существует");
         valid(user);
         return userRepository.save(user);
     }
@@ -29,9 +27,6 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @Override
     public User update(User user) {
-//        if (findUserByEmail(user.getEmail()).isPresent())
-//            throw new EmailConflictException("Обновлениеи не внесет изменений");
-//        return userRepository.update(user);
         return updateUserIfExist(user);
     }
 
@@ -42,12 +37,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User findById(Long id) {
+    public User getById(Long id) {
         return userRepository.findById(id).orElseThrow(() -> new NotFoundException("Пользователь не найден"));
     }
 
     @Override
-    public List<User> findAll() {
+    public List<User> getAll() {
         return userRepository.findAll();
     }
 
@@ -57,14 +52,14 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Optional<User> findUserByEmail(String email) {
-        return Optional.ofNullable(findAll()
+        return Optional.ofNullable(getAll()
                 .stream()
                 .filter(userDto -> userDto.getEmail().equals(email))
                 .findFirst().orElse(null));
     }
 
     private User updateUserIfExist(User user) {
-        User updateUser = findById(user.getId());
+        User updateUser = getById(user.getId());
         if (user.getEmail() != null) updateUser.setEmail(user.getEmail());
         if (user.getName() != null) updateUser.setName(user.getName());
         userRepository.save(updateUser);

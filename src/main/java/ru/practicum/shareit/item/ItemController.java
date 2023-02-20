@@ -40,18 +40,18 @@ public class ItemController {
     @GetMapping("/{id}")
     public ItemDto findById(@PathVariable Long id, @RequestHeader("X-Sharer-User-Id") Long ownerId) {
         if (id < 0 || id == null) throw new BadRequestException("Некорректный id");
-        return itemService.findById(id, ownerId);
+        return itemService.getById(id, ownerId);
     }
 
     @GetMapping
     public List<ItemDto> findAll(@RequestHeader(value = "X-SHARER-USER-ID") Long ownerId) {
-        return itemService.findByOwnerId(ownerId);
+        return itemService.getByOwnerId(ownerId);
     }
 
     @GetMapping("/search")
     public List<ItemDto> findByText(@RequestParam String text) {
         if (text.isEmpty()) return List.of();
-        return itemService.findByText(text.trim().toLowerCase());
+        return itemService.getByText(text.trim().toLowerCase());
     }
 
     @PostMapping("/{itemId}/comment")

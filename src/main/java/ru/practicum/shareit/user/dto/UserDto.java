@@ -8,9 +8,11 @@ import javax.validation.constraints.NotNull;
 @Component
 public class UserDto {
     private Long id;
+
     @NotNull
     @Email
     private String email;
+
     private String name;
 
     public UserDto(Long id, String email, String name) {

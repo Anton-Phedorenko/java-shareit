@@ -8,6 +8,6 @@ import ru.practicum.shareit.item.model.Item;
 import java.util.List;
 
 public interface CommentRepository extends JpaRepository<Comment, Long> {
-    @Query("select c from Comment c where c.item in ?1")
+    @Query("SELECT c FROM Comment c WHERE c.item IN ?1")
     List<Comment> findCommentForItems(List<Item> items);
 }

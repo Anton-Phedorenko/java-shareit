@@ -15,15 +15,20 @@ public class Item {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name = "name")
+
+    @Column(name = "name", length = 300)
     private String name;
-    @Column(name = "description")
+
+    @Column(name = "description", length = 300)
     private String description;
+
     @Column(name = "is_available")
     private Boolean available;
+
     @ManyToOne
     @JoinColumn(name = "owner_id")
     private User owner;
+
     @Column(name = "request_id")
     private Long requestId;
 

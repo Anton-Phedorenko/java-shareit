@@ -48,7 +48,7 @@ public class ItemServiceImpl implements ItemService {
     @Override
     @Transactional
     public ItemDto create(ItemDto itemDto, Long userId) {
-        User user = userService.findById(userId);
+        User user = userService.getById(userId);
         Item item = itemRepository.save(ItemMapper.toItem(itemDto));
         item.setOwner(user);
         return ItemMapper.toItemDto(item);
@@ -57,8 +57,10 @@ public class ItemServiceImpl implements ItemService {
     @Override
     @Transactional
     public ItemDto update(ItemDto itemDto, Long userId) {
-        if (itemDto.getId() == null) throw new NotFoundException("Вещь не может быть найдена");
-        Item updateItem = findItemById(itemDto.getId());
+        if (itemDto.getId() == null) {
+            throw new NotFoundException("Вещь" + itemDto.getId() + " не может быть найдена");
+        }
+        Item updateItem = getItemById(itemDto.getId());
         Item newItem = ItemMapper.toItem(itemDto);
         System.out.println(updateItem);
         if (updateItem.getOwner().getId().equals(userId)) {
@@ -73,9 +75,9 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public ItemDto findById(Long itemId, Long ownerId) {
+    public ItemDto getById(Long itemId, Long ownerId) {
         List<Item> items = new ArrayList<>();
-        items.add(findItemById(itemId));
+        items.add(getItemById(itemId));
         Map<Item, List<Booking>> approveBookings = getApprovedBookings(items);
         Map<Item, List<Comment>> comments = getComments(items);
         if (items.get(0).getOwner().getId().equals(ownerId)) {
@@ -87,7 +89,7 @@ public class ItemServiceImpl implements ItemService {
                 comments.getOrDefault(items.get(0), Collections.emptyList()));
     }
 
-    public Item findItemById(Long id) {
+    public Item getItemById(Long id) {
         return itemRepository.findById(id).orElseThrow(() -> new NotFoundException("Вещь не может быть найдена"));
     }
 
@@ -98,7 +100,7 @@ public class ItemServiceImpl implements ItemService {
 
 
     @Override
-    public List<ItemDto> findByOwnerId(Long ownerId) {
+    public List<ItemDto> getByOwnerId(Long ownerId) {
         List<ItemDto> itemDtos = new ArrayList<>();
         List<Item> items = itemRepository.getAll(ownerId);
         Map<Item, List<Booking>> approvedBookings = getApprovedBookings(items);
@@ -109,12 +111,12 @@ public class ItemServiceImpl implements ItemService {
         return itemDtos;
     }
 
-    public List<ItemDto> findByText(String text) {
-        return ItemMapper.itemsDto(itemRepository.getByText(text));
+    public List<ItemDto> getByText(String text) {
+        return ItemMapper.itemsDto(itemRepository.findByText(text));
     }
 
     public Item partialUpdate(Item item) {
-        Item itemNew = findItemById(item.getId());
+        Item itemNew = getItemById(item.getId());
         if (item.getName() != null && !item.getName().isBlank()) {
             itemNew.setName(item.getName());
         }

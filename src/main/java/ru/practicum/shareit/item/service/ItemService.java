@@ -12,9 +12,9 @@ public interface ItemService {
 
     void delete(Long id);
 
-    Item findItemById(Long id);
+    Item getItemById(Long id);
 
-    ItemDto findById(Long itemId, Long userId);
+    ItemDto getById(Long itemId, Long userId);
 
-    List<ItemDto> findByOwnerId(Long ownerId);
+    List<ItemDto> getByOwnerId(Long ownerId);
 }

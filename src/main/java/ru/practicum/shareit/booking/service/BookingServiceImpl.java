@@ -24,8 +24,11 @@ import java.util.List;
 @Service
 public class BookingServiceImpl implements BookingService {
     private final BookingRepository bookingRepository;
+
     private final UserService userService;
+
     private final ItemService itemService;
+
     private final Sort sort = Sort.by(Sort.Direction.DESC, "start");
 
     public BookingServiceImpl(BookingRepository bookingRepository, UserService userService, ItemService itemService) {
@@ -37,8 +40,8 @@ public class BookingServiceImpl implements BookingService {
     @Override
     @Transactional
     public BookingDto create(BookingDtoCreation bookingDtoCreation, Long userId) {
-        User user = userService.findById(userId);
-        Item item = itemService.findItemById(bookingDtoCreation.getItemId());
+        User user = userService.getById(userId);
+        Item item = itemService.getItemById(bookingDtoCreation.getItemId());
         if (!item.getOwner().getId().equals(userId)) {
             Booking booking = BookingMapper.toBooking(bookingDtoCreation);
             booking.setBooker(user);
@@ -84,26 +87,26 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public List<BookingDto> findByOwner(Long ownerId, String state) {
-        userService.findById(ownerId);
+        userService.getById(ownerId);
         List<Booking> bookings = List.of();
         switch (State.States.getState(state)) {
             case ALL:
-                bookings = bookingRepository.getAllByOwnerAll(ownerId, sort);
+                bookings = bookingRepository.findAllByOwnerAll(ownerId, sort);
                 break;
             case CURRENT:
-                bookings = bookingRepository.getAllByOwnerCurrent(ownerId, LocalDateTime.now(), sort);
+                bookings = bookingRepository.findAllByOwnerCurrent(ownerId, LocalDateTime.now(), sort);
                 break;
             case PAST:
-                bookings = bookingRepository.getAllByOwnerPast(ownerId, LocalDateTime.now(), sort);
+                bookings = bookingRepository.findAllByOwnerPast(ownerId, LocalDateTime.now(), sort);
                 break;
             case FUTURE:
-                bookings = bookingRepository.getAllByOwnerFuture(ownerId, sort);
+                bookings = bookingRepository.findAllByOwnerFuture(ownerId, sort);
                 break;
             case WAITING:
-                bookings = bookingRepository.getAllByOwnerWaiting(ownerId, sort);
+                bookings = bookingRepository.findAllByOwnerWaiting(ownerId, sort);
                 break;
             case REJECTED:
-                bookings = bookingRepository.getAllByOwnerRejected(ownerId, sort);
+                bookings = bookingRepository.findAllByOwnerRejected(ownerId, sort);
                 break;
         }
 
@@ -112,26 +115,26 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public List<BookingDto> getAllByBooker(Long userId, String state) {
-        userService.findById(userId);
+        userService.getById(userId);
         List<Booking> bookings = List.of();
         switch (State.States.getState(state)) {
             case ALL:
-                bookings = bookingRepository.getAllByBookerAll(userId, sort);
+                bookings = bookingRepository.findAllByBookerAll(userId, sort);
                 break;
             case CURRENT:
-                bookings = bookingRepository.getAllByBookerCurrent(userId, LocalDateTime.now(), sort);
+                bookings = bookingRepository.findAllByBookerCurrent(userId, LocalDateTime.now(), sort);
                 break;
             case PAST:
-                bookings = bookingRepository.getAllByBookerPast(userId, LocalDateTime.now(), sort);
+                bookings = bookingRepository.findAllByBookerPast(userId, LocalDateTime.now(), sort);
                 break;
             case FUTURE:
-                bookings = bookingRepository.getAllByBookerFuture(userId, sort);
+                bookings = bookingRepository.findAllByBookerFuture(userId, sort);
                 break;
             case WAITING:
-                bookings = bookingRepository.getAllByBookerWaiting(userId, sort);
+                bookings = bookingRepository.findAllByBookerWaiting(userId, sort);
                 break;
             case REJECTED:
-                bookings = bookingRepository.getAllByBookerRejected(userId, sort);
+                bookings = bookingRepository.findAllByBookerRejected(userId, sort);
                 break;
         }
         return BookingMapper.bookingsDto(bookings);

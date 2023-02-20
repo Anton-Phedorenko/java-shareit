@@ -45,11 +45,11 @@ public class UserController {
     @GetMapping("/{id}")
     public UserDto findUserById(@PathVariable Long id) {
         if (id < 0 || id == null) throw new BadRequestException("Некорректный id");
-        return UserMapper.toUserDto(userService.findById(id));
+        return UserMapper.toUserDto(userService.getById(id));
     }
 
     @GetMapping
     public List<UserDto> findAll() {
-        return UserMapper.usersDto(userService.findAll());
+        return UserMapper.usersDto(userService.getAll());
     }
 }

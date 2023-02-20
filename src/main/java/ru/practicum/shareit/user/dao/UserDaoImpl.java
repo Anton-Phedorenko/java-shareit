@@ -15,6 +15,7 @@ import java.util.stream.Collectors;
 public class UserDaoImpl implements UserDao {
 
     private static Long userId = 0L;
+
     private final Map<Long, UserDto> users = new HashMap<>();
 
 

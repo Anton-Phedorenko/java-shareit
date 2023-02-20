@@ -33,8 +33,8 @@ public class CommentServiceImpl implements CommentService {
     @Override
     @Transactional
     public CommentDto create(CommentDto commentDto, Long itemId, Long userId) {
-        Item item = itemService.findItemById(itemId);
-        List<Booking> bookings = bookingRepository.getAllByBookerPast(
+        Item item = itemService.getItemById(itemId);
+        List<Booking> bookings = bookingRepository.findAllByBookerPast(
                         userId,
                         LocalDateTime.now(),
                         Sort.by(Sort.Direction.DESC, "start"))

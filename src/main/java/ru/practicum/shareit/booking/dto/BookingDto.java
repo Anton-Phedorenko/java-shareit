@@ -15,10 +15,15 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class BookingDto {
     private Long id;
+
     private LocalDateTime start;
+
     private LocalDateTime end;
+
     private Status status = Status.WAITING;
+
     private Item item;
+
     private Booker booker;
 
     @Data
@@ -31,6 +36,7 @@ public class BookingDto {
     @AllArgsConstructor
     public static class Item {
         private Long id;
+
         private String name;
     }
 }
