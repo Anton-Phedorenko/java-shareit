@@ -3,12 +3,13 @@ package ru.practicum.shareit.user;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.exception.BadRequestException;
 import ru.practicum.shareit.user.dto.UserDto;
-import ru.practicum.shareit.user.dto.UserMapper;
-import ru.practicum.shareit.user.repository.UserRepository;
+import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.service.UserServiceImpl;
 
 import javax.validation.Valid;
 import java.util.List;
+
+import static ru.practicum.shareit.user.dto.UserMapper.*;
 
 /**
  * TODO Sprint add-controllers.
@@ -17,24 +18,27 @@ import java.util.List;
 @RequestMapping(path = "/users")
 public class UserController {
     private final UserServiceImpl userService;
-    private final UserRepository userRepository;
 
-    public UserController(UserServiceImpl userService,
-                          UserRepository userRepository) {
+
+    public UserController(UserServiceImpl userService) {
         this.userService = userService;
-        this.userRepository = userRepository;
     }
 
     @PostMapping
     public UserDto create(@RequestBody @Valid UserDto userDto) {
-        return UserMapper.toUserDto(userService.create(UserMapper.toUser(userDto)));
+        User user = userService.create(toUser(userDto));
+
+        return toUserDto(user);
     }
 
     @PatchMapping("/{id}")
     public UserDto update(@RequestBody UserDto userDto, @PathVariable Long id) {
-        if (id == null || id < 0) throw new BadRequestException("Некорректный id пользователя");
+        if (id == null || id < 0) {
+            throw new BadRequestException("Некорректный id пользователя");
+        }
         userDto.setId(id);
-        return UserMapper.toUserDto(userService.update(UserMapper.toUser(userDto)));
+
+        return toUserDto(userService.update(toUser(userDto)));
     }
 
     @DeleteMapping("/{id}")
@@ -44,12 +48,15 @@ public class UserController {
 
     @GetMapping("/{id}")
     public UserDto findUserById(@PathVariable Long id) {
-        if (id < 0 || id == null) throw new BadRequestException("Некорректный id");
-        return UserMapper.toUserDto(userService.getById(id));
+        if (id == null || id < 0) {
+            throw new BadRequestException("Некорректный id");
+        }
+
+        return toUserDto(userService.getById(id));
     }
 
     @GetMapping
     public List<UserDto> findAll() {
-        return UserMapper.usersDto(userService.getAll());
+        return usersDto(userService.getAll());
     }
 }

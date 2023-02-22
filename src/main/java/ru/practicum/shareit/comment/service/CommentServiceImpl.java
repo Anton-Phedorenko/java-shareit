@@ -21,7 +21,9 @@ import java.util.stream.Collectors;
 
 public class CommentServiceImpl implements CommentService {
     private final CommentRepository commentRepository;
+
     private final ItemService itemService;
+
     private final BookingRepository bookingRepository;
 
     public CommentServiceImpl(CommentRepository commentRepository, ItemService itemService, BookingRepository bookingRepository) {
@@ -41,13 +43,14 @@ public class CommentServiceImpl implements CommentService {
                 .stream()
                 .filter(b -> b.getItem().getId().equals(itemId))
                 .collect(Collectors.toList());
-        if (bookings.size() != 0) {
-            Comment comment = commentRepository.save(CommentMapper.toComment(commentDto));
-            comment.setAuthor(bookings.get(0).getBooker());
-            comment.setItem(item);
-            return CommentMapper.toCommentDto(comment);
-        } else {
+        if (bookings.size() == 0) {
             throw new BadRequestException("Предмет не бронировался или ожидает бронирования");
         }
+
+        Comment comment = commentRepository.save(CommentMapper.toComment(commentDto));
+        comment.setAuthor(bookings.get(0).getBooker());
+        comment.setItem(item);
+
+        return CommentMapper.toCommentDto(comment);
     }
 }

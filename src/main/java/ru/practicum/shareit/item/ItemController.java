@@ -19,6 +19,7 @@ import java.util.List;
 @RequestMapping("/items")
 public class ItemController {
     private final ItemServiceImpl itemService;
+
     private final CommentService commentService;
 
     public ItemController(ItemServiceImpl itemService, CommentService commentService) {
@@ -34,12 +35,15 @@ public class ItemController {
     @PatchMapping("/{id}")
     public ItemDto update(@RequestBody @Valid ItemDto itemDto, @PathVariable Long id, @RequestHeader(value = "X-SHARER-USER-ID") Long ownerId) {
         itemDto.setId(id);
+
         return itemService.update(itemDto, ownerId);
     }
 
     @GetMapping("/{id}")
     public ItemDto findById(@PathVariable Long id, @RequestHeader("X-Sharer-User-Id") Long ownerId) {
-        if (id < 0 || id == null) throw new BadRequestException("Некорректный id");
+        if (id == null || id < 0) {
+            throw new BadRequestException("Некорректный id");
+        }
         return itemService.getById(id, ownerId);
     }
 
@@ -50,7 +54,10 @@ public class ItemController {
 
     @GetMapping("/search")
     public List<ItemDto> findByText(@RequestParam String text) {
-        if (text.isEmpty()) return List.of();
+        if (text.isEmpty()) {
+            return List.of();
+        }
+
         return itemService.getByText(text.trim().toLowerCase());
     }
 

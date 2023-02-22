@@ -21,6 +21,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User create(User user) {
         valid(user);
+
         return userRepository.save(user);
     }
 
@@ -38,7 +39,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getById(Long id) {
-        return userRepository.findById(id).orElseThrow(() -> new NotFoundException("Пользователь не найден"));
+        return userRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Пользователь не найден"));
     }
 
     @Override
@@ -47,15 +49,14 @@ public class UserServiceImpl implements UserService {
     }
 
     public void valid(User user) {
-        if (user.getEmail().isEmpty() || user.getEmail() == null) throw new RuntimeException();
+        if (user.getEmail() == null || user.getEmail().isEmpty()) {
+            throw new RuntimeException();
+        }
     }
 
     @Override
     public Optional<User> findUserByEmail(String email) {
-        return Optional.ofNullable(getAll()
-                .stream()
-                .filter(userDto -> userDto.getEmail().equals(email))
-                .findFirst().orElse(null));
+        return userRepository.findByEmail(email);
     }
 
     private User updateUserIfExist(User user) {
@@ -63,6 +64,7 @@ public class UserServiceImpl implements UserService {
         if (user.getEmail() != null) updateUser.setEmail(user.getEmail());
         if (user.getName() != null) updateUser.setName(user.getName());
         userRepository.save(updateUser);
+
         return updateUser;
     }
 }

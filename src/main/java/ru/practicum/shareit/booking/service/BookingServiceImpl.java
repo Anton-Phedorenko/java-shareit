@@ -4,10 +4,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.booking.State;
-import ru.practicum.shareit.booking.Status;
 import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.BookingDtoCreation;
-import ru.practicum.shareit.booking.mapper.BookingMapper;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.repository.BookingRepository;
 import ru.practicum.shareit.exception.BadRequestException;
@@ -20,6 +18,9 @@ import ru.practicum.shareit.user.service.UserService;
 
 import java.time.LocalDateTime;
 import java.util.List;
+
+import static ru.practicum.shareit.booking.Status.*;
+import static ru.practicum.shareit.booking.mapper.BookingMapper.*;
 
 @Service
 public class BookingServiceImpl implements BookingService {
@@ -43,14 +44,15 @@ public class BookingServiceImpl implements BookingService {
         User user = userService.getById(userId);
         Item item = itemService.getItemById(bookingDtoCreation.getItemId());
         if (!item.getOwner().getId().equals(userId)) {
-            Booking booking = BookingMapper.toBooking(bookingDtoCreation);
+            Booking booking = toBooking(bookingDtoCreation);
             booking.setBooker(user);
             booking.setItem(item);
-            booking.setStatus(Status.WAITING);
+            booking.setStatus(WAITING);
             if (booking.getEnd().isBefore(booking.getStart()) || !item.getAvailable()) {
                 throw new BadRequestException("Эту вещь арендовать нельзя");
             }
-            return BookingMapper.toBookingDto(bookingRepository.save(booking));
+
+            return toBookingDto(bookingRepository.save(booking));
         } else {
             throw new BookingStatusException("Нет необходимости заказывать у самого себя");
         }
@@ -60,18 +62,19 @@ public class BookingServiceImpl implements BookingService {
     @Transactional
     public BookingDto update(Long bookingId, Long userId, Boolean approved) {
         Booking booking = bookingRepository.findById(bookingId)
-                .orElseThrow(() -> new NotFoundException("Такого заказа не существует"));
+                .orElseThrow(() -> new NotFoundException("Заказа с id " + bookingId + " не существует"));
         if (!booking.getBooker().getId().equals(userId)) {
-            if (approved && !booking.getStatus().equals(Status.APPROVED)) {
-                booking.setStatus(Status.APPROVED);
-            } else if (!approved && !booking.getStatus().equals(Status.REJECTED)) {
-                booking.setStatus(Status.REJECTED);
+            if (approved && !booking.getStatus().equals(APPROVED)) {
+                booking.setStatus(APPROVED);
+            } else if (!approved && !booking.getStatus().equals(REJECTED)) {
+                booking.setStatus(REJECTED);
             } else {
                 throw new BadRequestException("У заказа уже такой статус");
             }
         } else {
             throw new BookingStatusException("Заказчик не может изменить статус заказа!");
         }
+
         return findById(bookingId, userId);
     }
 
@@ -82,7 +85,8 @@ public class BookingServiceImpl implements BookingService {
         if (!booking.getBooker().getId().equals(userId) && !booking.getItem().getOwner().getId().equals(userId)) {
             throw new NotFoundException("Заказ не имеет отношения к данному пользователю");
         }
-        return BookingMapper.toBookingDto(booking);
+
+        return toBookingDto(booking);
     }
 
     @Override
@@ -110,7 +114,7 @@ public class BookingServiceImpl implements BookingService {
                 break;
         }
 
-        return BookingMapper.bookingsDto(bookings);
+        return bookingsDto(bookings);
     }
 
     @Override
@@ -137,7 +141,8 @@ public class BookingServiceImpl implements BookingService {
                 bookings = bookingRepository.findAllByBookerRejected(userId, sort);
                 break;
         }
-        return BookingMapper.bookingsDto(bookings);
+
+        return bookingsDto(bookings);
     }
 }
 

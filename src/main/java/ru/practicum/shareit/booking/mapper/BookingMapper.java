@@ -15,6 +15,7 @@ public class BookingMapper {
         booking.setId(booking.getId());
         booking.setStart(bookingDtoCreation.getStart());
         booking.setEnd(bookingDtoCreation.getEnd());
+
         return booking;
     }
 
