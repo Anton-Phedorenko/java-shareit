@@ -1,59 +1,70 @@
 package ru.practicum.shareit.user.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.practicum.shareit.exception.EmailConflictException;
+import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.exception.NotFoundException;
-import ru.practicum.shareit.user.dao.UserDaoImpl;
-import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.model.User;
+import ru.practicum.shareit.user.repository.UserRepository;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements UserService {
-    private final UserDaoImpl userDao;
+    private final UserRepository userRepository;
 
-    @Autowired
-    public UserServiceImpl(UserDaoImpl userDao) {
-        this.userDao = userDao;
+    public UserServiceImpl(UserRepository userRepository) {
+        this.userRepository = userRepository;
     }
 
-    public UserDto create(User user) {
-        if (findUserByEmail(user.getEmail()).isPresent())
-            throw new EmailConflictException("Пользователь с таким email уже существует");
+    @Transactional
+    @Override
+    public User create(User user) {
         valid(user);
-        return userDao.create(user);
+
+        return userRepository.save(user);
     }
 
-    public UserDto update(User user, Long id) {
-        if (findUserByEmail(user.getEmail()).isPresent())
-            throw new EmailConflictException("Обновлениеи не внесет изменений");
-        return userDao.update(user, id);
+    @Transactional
+    @Override
+    public User update(User user) {
+        return updateUserIfExist(user);
     }
 
+    @Transactional
+    @Override
     public void delete(Long id) {
-        userDao.delete(id);
-    }
-
-    public UserDto findById(Long id) {
-        return userDao.findById(id).orElseThrow(() -> new NotFoundException("Пользователь не найден"));
-    }
-
-    public List<UserDto> findAll() {
-        return userDao.findAll();
-    }
-
-    public void valid(User user) {
-        if (user.getEmail().isEmpty() || user.getEmail() == null) throw new RuntimeException();
+        userRepository.deleteById(id);
     }
 
     @Override
-    public Optional<UserDto> findUserByEmail(String email) {
-        return Optional.ofNullable(findAll()
-                .stream()
-                .filter(userDto -> userDto.getEmail().equals(email))
-                .findFirst().orElse(null));
+    public User getById(Long id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Пользователь не найден"));
+    }
+
+    @Override
+    public List<User> getAll() {
+        return userRepository.findAll();
+    }
+
+    public void valid(User user) {
+        if (user.getEmail() == null || user.getEmail().isEmpty()) {
+            throw new RuntimeException();
+        }
+    }
+
+    @Override
+    public Optional<User> findUserByEmail(String email) {
+        return userRepository.findByEmail(email);
+    }
+
+    private User updateUserIfExist(User user) {
+        User updateUser = getById(user.getId());
+        if (user.getEmail() != null) updateUser.setEmail(user.getEmail());
+        if (user.getName() != null) updateUser.setName(user.getName());
+        userRepository.save(updateUser);
+
+        return updateUser;
     }
 }

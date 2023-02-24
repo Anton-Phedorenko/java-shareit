@@ -9,6 +9,8 @@ import ru.practicum.shareit.user.service.UserServiceImpl;
 import javax.validation.Valid;
 import java.util.List;
 
+import static ru.practicum.shareit.user.dto.UserMapper.*;
+
 /**
  * TODO Sprint add-controllers.
  */
@@ -17,18 +19,26 @@ import java.util.List;
 public class UserController {
     private final UserServiceImpl userService;
 
+
     public UserController(UserServiceImpl userService) {
         this.userService = userService;
     }
 
     @PostMapping
-    public UserDto create(@RequestBody @Valid User user) {
-        return userService.create(user);
+    public UserDto create(@RequestBody @Valid UserDto userDto) {
+        User user = userService.create(toUser(userDto));
+
+        return toUserDto(user);
     }
 
     @PatchMapping("/{id}")
-    public UserDto update(@RequestBody User user, @PathVariable Long id) {
-        return userService.update(user, id);
+    public UserDto update(@RequestBody UserDto userDto, @PathVariable Long id) {
+        if (id == null || id < 0) {
+            throw new BadRequestException("Некорректный id пользователя");
+        }
+        userDto.setId(id);
+
+        return toUserDto(userService.update(toUser(userDto)));
     }
 
     @DeleteMapping("/{id}")
@@ -38,12 +48,15 @@ public class UserController {
 
     @GetMapping("/{id}")
     public UserDto findUserById(@PathVariable Long id) {
-        if (id < 0 || id == null) throw new BadRequestException("Некорректный id");
-        return userService.findById(id);
+        if (id == null || id < 0) {
+            throw new BadRequestException("Некорректный id");
+        }
+
+        return toUserDto(userService.getById(id));
     }
 
     @GetMapping
     public List<UserDto> findAll() {
-        return userService.findAll();
+        return usersDto(userService.getAll());
     }
 }
