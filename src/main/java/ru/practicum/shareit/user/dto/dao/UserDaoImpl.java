@@ -1,4 +1,4 @@
-package ru.practicum.shareit.user.dao;
+package ru.practicum.shareit.user.dto.dao;
 
 import org.springframework.stereotype.Repository;
 import ru.practicum.shareit.user.dto.UserDto;
