@@ -1,10 +1,11 @@
-package ru.practicum.shareit.request.dto;
+package ru.practicum.shareit.requests.dto;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.json.JsonTest;
 import org.springframework.boot.test.json.JacksonTester;
 import org.springframework.boot.test.json.JsonContent;
+import ru.practicum.shareit.request.dto.ItemRequestDto;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -13,10 +14,11 @@ import java.util.List;
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 
 @JsonTest
-class ItemRequestDtoOutputTest {
+class ItemRequestDtoTest {
 
     @Autowired
     private JacksonTester<ItemRequestDto> jsonOutput;
+
     @Autowired
     private JacksonTester<List<ItemRequestDto>> jsonList;
 
@@ -37,7 +39,6 @@ class ItemRequestDtoOutputTest {
         assertThat(result).extractingJsonPathArrayValue("$.items").isEqualTo(List.of());
         assertThat(result).extractingJsonPathStringValue("$.created")
                 .isEqualTo(itemRequestDtoOutput.getCreated().toString());
-
     }
 
     @Test
@@ -72,6 +73,5 @@ class ItemRequestDtoOutputTest {
         assertThat(result).extractingJsonPathNumberValue("$[0].items.[0].requestId").isEqualTo(1);
         assertThat(result).extractingJsonPathStringValue("$[0].created")
                 .isEqualTo(itemRequestDtoOutput.getCreated().toString());
-
     }
 }
