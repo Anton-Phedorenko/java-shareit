@@ -113,6 +113,7 @@ class UserServiceImplTestIntegration {
         assertEquals(user1.getName(), user.getName());
         assertEquals(user1.getEmail(), user.getEmail());
     }
+
     @Test
     void deleteById() {
         User user2 = new User();
