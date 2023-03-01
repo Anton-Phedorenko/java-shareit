@@ -4,6 +4,14 @@ create table if not exists users
     email varchar(300) UNIQUE,
     name  varchar(300)
     );
+create table if not exists request
+    (
+    id int generated always as identity primary key,
+    description varchar(300),
+    requestor_id int,
+    created TIMESTAMP,
+    constraint fk_request_to_users foreign key (requestor_id) references users (id)
+    );
 
 create table if not exists items
     (
@@ -13,7 +21,8 @@ create table if not exists items
     is_available boolean,
     owner_id int,
     request_id int,
-    constraint fk_items_to_users foreign key (owner_id) references users (id) on delete cascade
+    constraint fk_items_to_users foreign key (owner_id) references users (id) on delete cascade,
+    constraint fk_items_to_requestor foreign key (request_id) references request (id)
     );
 
 CREATE TABLE if not exists booking

@@ -1,6 +1,6 @@
 package ru.practicum.shareit.comment.mapper;
 
-import ru.practicum.shareit.comment.dto.CommentDto;
+import ru.practicum.shareit.comment.CommentDto;
 import ru.practicum.shareit.comment.model.Comment;
 import ru.practicum.shareit.item.dto.ItemDto;
 

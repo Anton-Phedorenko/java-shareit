@@ -1,6 +1,7 @@
 package ru.practicum.shareit.item.dto;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import ru.practicum.shareit.item.valid.Create;
@@ -16,6 +17,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class ItemDto {
     private Long id;
 
@@ -33,6 +35,8 @@ public class ItemDto {
     private Booking nextBooking;
 
     private List<Comment> comments;
+
+    private Long requestId;
 
     public ItemDto(Long id, String name, String description, Boolean available) {
         this.id = id;
