@@ -18,6 +18,7 @@ import java.util.Optional;
 @ExtendWith(MockitoExtension.class)
 class UserServiceImplTest {
     private UserServiceImpl userService;
+
     @Mock
     private UserRepository userRepository;
 
@@ -99,6 +100,4 @@ class UserServiceImplTest {
         Assertions.assertEquals("Макс", newUser.getName());
         Assertions.assertEquals("max@yandex.ru", newUser.getEmail());
     }
-
-
 }

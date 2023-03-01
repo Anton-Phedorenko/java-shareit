@@ -113,5 +113,22 @@ class UserServiceImplTestIntegration {
         assertEquals(user1.getName(), user.getName());
         assertEquals(user1.getEmail(), user.getEmail());
     }
+    @Test
+    void deleteById() {
+        User user2 = new User();
+        user2.setName("Юля");
+        user2.setEmail("jul@yandex.ru");
 
+        User userNew1 = service.create(user1);
+        service.create(user2);
+
+        service.delete(userNew1.getId());
+        TypedQuery<User> query = em.createQuery("select u from User u", User.class);
+        List<User> users = query.getResultList();
+
+        assertEquals(1, users.size());
+        assertEquals(user2.getId(), users.get(0).getId());
+        assertEquals(user2.getName(), users.get(0).getName());
+        assertEquals(user2.getEmail(), users.get(0).getEmail());
+    }
 }
