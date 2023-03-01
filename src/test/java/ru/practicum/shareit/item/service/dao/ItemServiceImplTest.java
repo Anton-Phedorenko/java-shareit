@@ -36,22 +36,34 @@ import static org.springframework.data.domain.Sort.Direction.DESC;
 @ExtendWith(MockitoExtension.class)
 public class ItemServiceImplTest {
     private ItemService itemService;
+
     @Mock
     private ItemRepository itemRepository;
+
     @Mock
     private UserService userService;
+
     @Mock
     private BookingRepository bookingRepository;
+
     @Mock
     private CommentRepository commentRepository;
+
     @Mock
     private RequestRepository requestRepository;
+
     private User requestor;
+
     private User owner;
+
     private Item item;
+
     private ItemRequest request;
+
     private ItemDto itemDtoInput;
+
     private Comment comment;
+
     private Booking booking;
 
     @BeforeEach
@@ -121,7 +133,6 @@ public class ItemServiceImplTest {
         Assertions.assertEquals(item.getDescription(), itemDtoOutput.getDescription());
         Assertions.assertEquals(item.getAvailable(), itemDtoOutput.getAvailable());
         Assertions.assertEquals(item.getRequest().getId(), itemDtoOutput.getRequestId());
-
     }
 
     @Test
@@ -182,7 +193,6 @@ public class ItemServiceImplTest {
                     itemService.update(itemDtoInput, requestor.getId());
                 });
         Assertions.assertEquals("У данной вещи другой владелец", ex.getMessage());
-
     }
 
     @Test

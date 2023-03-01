@@ -97,19 +97,6 @@ public class ItemServiceImpl implements ItemService {
         return itemDto;
     }
 
-
-    @Override
-    public List<ItemDto> getByOwnerId(Long ownerId) {
-        List<ItemDto> itemDtos = new ArrayList<>();
-        List<Item> items = itemRepository.getAll(ownerId, PageRequest.of(0, 20));
-        Map<Item, List<Booking>> approvedBookings = getApprovedBookings(items);
-        for (Item item : items) {
-            itemDtos.add(appendBookingToItem(item,
-                    approvedBookings.getOrDefault(item, Collections.emptyList())));
-        }
-        return itemDtos;
-    }
-
     @Override
     public List<ItemDto> getByText(String text, Integer from, Integer size) {
         return ItemMapper.itemsDto(itemRepository.findByText(text, PageRequest.of(from > 0 ? from / size : 0,

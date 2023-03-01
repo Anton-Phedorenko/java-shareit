@@ -29,11 +29,6 @@ public class ExceptionsHandler {
     }
 
     @ExceptionHandler
-    public ResponseEntity<String> emailConflictHandler(EmailConflictException e) {
-        return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
-    }
-
-    @ExceptionHandler
     public ResponseEntity<String> bookingConflictHandler(BookingStatusException e) {
         return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
     }
