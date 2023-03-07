@@ -9,7 +9,7 @@ spring:
       on-profile: ci,test,default
   sql:
     init:
-      mode: always     
+      mode: always       
   jpa:
     hibernate:
       ddl-auto: none
