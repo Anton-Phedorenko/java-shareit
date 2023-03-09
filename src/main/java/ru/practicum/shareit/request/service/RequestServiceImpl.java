@@ -46,7 +46,9 @@ public class RequestServiceImpl implements RequestService {
     public ItemRequestDto create(ItemRequestCreation itemRequestCreation, Long userId) {
         ItemRequest itemRequest = toRequest(itemRequestCreation);
         itemRequest.setRequestor(userService.getById(userId));
-        return toRequestDto(requestRepository.save(itemRequest));
+        ItemRequestDto itemRequestDto = toRequestDto(requestRepository.save(itemRequest));
+
+        return itemRequestDto;
     }
 
     @Override
