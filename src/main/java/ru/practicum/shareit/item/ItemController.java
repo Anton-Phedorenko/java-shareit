@@ -2,14 +2,16 @@ package ru.practicum.shareit.item;
 
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.shareit.comment.dto.CommentDto;
+import ru.practicum.shareit.comment.CommentDto;
 import ru.practicum.shareit.comment.service.CommentService;
 import ru.practicum.shareit.exception.BadRequestException;
 import ru.practicum.shareit.item.dto.ItemDto;
-import ru.practicum.shareit.item.service.ItemServiceImpl;
+import ru.practicum.shareit.item.service.ItemService;
 import ru.practicum.shareit.item.valid.Create;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.PositiveOrZero;
 import java.util.List;
 
 /**
@@ -17,12 +19,13 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/items")
+@Validated
 public class ItemController {
-    private final ItemServiceImpl itemService;
+    private final ItemService itemService;
 
     private final CommentService commentService;
 
-    public ItemController(ItemServiceImpl itemService, CommentService commentService) {
+    public ItemController(ItemService itemService, CommentService commentService) {
         this.itemService = itemService;
         this.commentService = commentService;
     }
@@ -47,18 +50,23 @@ public class ItemController {
         return itemService.getById(id, ownerId);
     }
 
-    @GetMapping
-    public List<ItemDto> findAll(@RequestHeader(value = "X-SHARER-USER-ID") Long ownerId) {
-        return itemService.getByOwnerId(ownerId);
-    }
 
     @GetMapping("/search")
-    public List<ItemDto> findByText(@RequestParam String text) {
-        if (text.isEmpty()) {
+    public List<ItemDto> getByText(@RequestParam("text") String text,
+                                   @PositiveOrZero @RequestParam(value = "from", defaultValue = "0") Integer from,
+                                   @Positive @RequestParam(value = "size", defaultValue = "20") Integer size) {
+        if (text.isBlank()) {
             return List.of();
+        } else {
+            return itemService.getByText(text.toLowerCase(), from, size);
         }
+    }
 
-        return itemService.getByText(text.trim().toLowerCase());
+    @GetMapping
+    public List<ItemDto> getAll(@RequestHeader("X-SHARER-USER-ID") Long userId,
+                                @PositiveOrZero @RequestParam(value = "from", defaultValue = "0") Integer from,
+                                @Positive @RequestParam(value = "size", defaultValue = "20") Integer size) {
+        return itemService.getAll(userId, from, size);
     }
 
     @PostMapping("/{itemId}/comment")

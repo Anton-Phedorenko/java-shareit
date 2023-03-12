@@ -1,6 +1,7 @@
 package ru.practicum.shareit.item.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,8 +15,9 @@ import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemMapper;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.repository.ItemRepository;
+import ru.practicum.shareit.request.model.ItemRequest;
+import ru.practicum.shareit.request.repository.RequestRepository;
 import ru.practicum.shareit.user.model.User;
-import ru.practicum.shareit.user.repository.UserRepository;
 import ru.practicum.shareit.user.service.UserService;
 
 import java.time.LocalDateTime;
@@ -29,21 +31,19 @@ import static java.util.stream.Collectors.toList;
 import static org.springframework.data.domain.Sort.Direction.DESC;
 
 @Service
+@RequiredArgsConstructor
 public class ItemServiceImpl implements ItemService {
-    private final UserRepository userRepository;
+
     private final ItemRepository itemRepository;
+
     private final UserService userService;
+
     private final BookingRepository bookingRepository;
+
     private final CommentRepository commentRepository;
 
-    @Autowired
-    public ItemServiceImpl(UserRepository userRepository, ItemRepository itemRepository, UserService userService, BookingRepository bookingRepository, CommentRepository commentRepository) {
-        this.itemRepository = itemRepository;
-        this.userRepository = userRepository;
-        this.userService = userService;
-        this.bookingRepository = bookingRepository;
-        this.commentRepository = commentRepository;
-    }
+    private final RequestRepository requestRepository;
+
 
     @Override
     @Transactional
@@ -51,21 +51,20 @@ public class ItemServiceImpl implements ItemService {
         User user = userService.getById(userId);
         Item item = itemRepository.save(ItemMapper.toItem(itemDto));
         item.setOwner(user);
+        appendRequest(itemDto, item);
         return ItemMapper.toItemDto(item);
     }
 
     @Override
     @Transactional
     public ItemDto update(ItemDto itemDto, Long userId) {
-        if (itemDto.getId() == null) {
-            throw new NotFoundException("Вещь" + itemDto.getId() + " не может быть найдена");
-        }
+
+        userService.getById(userId);
         Item updateItem = getItemById(itemDto.getId());
         Item newItem = ItemMapper.toItem(itemDto);
-        System.out.println(updateItem);
         if (updateItem.getOwner().getId().equals(userId)) {
-            newItem = partialUpdate(newItem);
-            return ItemMapper.toItemDto(newItem);
+            newItem = partialUpdate(appendRequest(itemDto, newItem));
+            return getById(newItem.getId(), newItem.getOwner().getId());
         }
         throw new NotFoundException("У данной вещи другой владелец");
     }
@@ -98,22 +97,28 @@ public class ItemServiceImpl implements ItemService {
         return itemDto;
     }
 
+    @Override
+    public List<ItemDto> getByText(String text, Integer from, Integer size) {
+        return ItemMapper.itemsDto(itemRepository.findByText(text, PageRequest.of(from > 0 ? from / size : 0,
+                size, Sort.unsorted())));
+    }
 
     @Override
-    public List<ItemDto> getByOwnerId(Long ownerId) {
-        List<ItemDto> itemDtos = new ArrayList<>();
-        List<Item> items = itemRepository.getAll(ownerId);
+    public List<ItemDto> getAll(Long userId, Integer from, Integer size) {
+        userService.getById(userId);
+        List<Item> items = itemRepository.getAll(userId, PageRequest.of(from > 0 ? from / size : 0,
+                size, Sort.unsorted()));
         Map<Item, List<Booking>> approvedBookings = getApprovedBookings(items);
+        Map<Item, List<Comment>> comments = getComments(items);
+        List<ItemDto> itemDtoOutputList = new ArrayList<>();
         for (Item item : items) {
-            itemDtos.add(appendBookingToItem(item,
-                    approvedBookings.getOrDefault(item, Collections.emptyList())));
+            itemDtoOutputList.add(appendCommentsToItem(appendBookingToItem(item,
+                            approvedBookings.getOrDefault(item, Collections.emptyList())),
+                    comments.getOrDefault(item, Collections.emptyList())));
         }
-        return itemDtos;
+        return itemDtoOutputList;
     }
 
-    public List<ItemDto> getByText(String text) {
-        return ItemMapper.itemsDto(itemRepository.findByText(text));
-    }
 
     public Item partialUpdate(Item item) {
         Item itemNew = getItemById(item.getId());
@@ -126,8 +131,8 @@ public class ItemServiceImpl implements ItemService {
         if (item.getAvailable() != null) {
             itemNew.setAvailable(item.getAvailable());
         }
-        if (item.getRequestId() != null) {
-            itemNew.setRequestId(item.getRequestId());
+        if (item.getRequest() != null) {
+            itemNew.setRequest(item.getRequest());
         }
         return itemNew;
     }
@@ -172,6 +177,15 @@ public class ItemServiceImpl implements ItemService {
         }
 
         return itemDto;
+    }
+
+    private Item appendRequest(ItemDto itemDto, Item itemNew) {
+        if (itemDto.getRequestId() != null) {
+            ItemRequest itemRequest = requestRepository.findById(itemDto.getRequestId())
+                    .orElseThrow(() -> new NotFoundException("Такого запроса не существует"));
+            itemNew.setRequest(itemRequest);
+        }
+        return itemNew;
     }
 }
 

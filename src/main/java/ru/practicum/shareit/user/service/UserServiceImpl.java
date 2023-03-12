@@ -7,7 +7,6 @@ import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.repository.UserRepository;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -20,8 +19,6 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @Override
     public User create(User user) {
-        valid(user);
-
         return userRepository.save(user);
     }
 
@@ -46,17 +43,6 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<User> getAll() {
         return userRepository.findAll();
-    }
-
-    public void valid(User user) {
-        if (user.getEmail() == null || user.getEmail().isEmpty()) {
-            throw new RuntimeException();
-        }
-    }
-
-    @Override
-    public Optional<User> findUserByEmail(String email) {
-        return userRepository.findByEmail(email);
     }
 
     private User updateUserIfExist(User user) {

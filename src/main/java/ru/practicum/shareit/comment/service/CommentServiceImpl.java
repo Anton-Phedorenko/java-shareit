@@ -1,11 +1,12 @@
 package ru.practicum.shareit.comment.service;
 
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.repository.BookingRepository;
-import ru.practicum.shareit.comment.dto.CommentDto;
+import ru.practicum.shareit.comment.CommentDto;
 import ru.practicum.shareit.comment.mapper.CommentMapper;
 import ru.practicum.shareit.comment.model.Comment;
 import ru.practicum.shareit.comment.repository.CommentRepository;
@@ -16,6 +17,8 @@ import ru.practicum.shareit.item.service.ItemService;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static org.springframework.data.domain.Sort.Direction.DESC;
 
 @Service
 
@@ -39,7 +42,7 @@ public class CommentServiceImpl implements CommentService {
         List<Booking> bookings = bookingRepository.findAllByBookerPast(
                         userId,
                         LocalDateTime.now(),
-                        Sort.by(Sort.Direction.DESC, "start"))
+                        PageRequest.of(0, 100, Sort.by(DESC, "start")))
                 .stream()
                 .filter(b -> b.getItem().getId().equals(itemId))
                 .collect(Collectors.toList());

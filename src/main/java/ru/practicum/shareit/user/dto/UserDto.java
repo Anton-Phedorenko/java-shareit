@@ -1,18 +1,22 @@
 package ru.practicum.shareit.user.dto;
 
 import org.springframework.stereotype.Component;
+import ru.practicum.shareit.item.valid.Create;
+import ru.practicum.shareit.item.valid.Update;
 
 import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 @Component
 public class UserDto {
     private Long id;
 
-    @NotNull
-    @Email
+    @NotNull(groups = {Create.class})
+    @Email(groups = {Create.class, Update.class})
     private String email;
 
+    @NotBlank(groups = {Create.class})
     private String name;
 
     public UserDto(Long id, String email, String name) {
