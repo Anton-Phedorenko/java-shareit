@@ -16,7 +16,7 @@ spring:
   #---
   spring:
     datasource:
-      driverClassName: org.postgresql.Driver
+      driverClassName: org.postgresql.Driver 
   datasource:
     url: jdbc:postgresql://localhost:5432/${POSTGRES_DB:shareit}
     username: ${POSTGRES_USER:postgres}
