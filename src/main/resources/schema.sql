@@ -1,49 +1,49 @@
-create table if not exists users
-    (
-    id    int generated always as identity primary key,
+CREATE TABLE IF NOT EXISTS users
+(
+    id int GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     email varchar(300) UNIQUE,
-    name  varchar(300)
-    );
-create table if not exists request
-    (
-    id int generated always as identity primary key,
+    name varchar(300)
+);
+CREATE TABLE IF NOT EXISTS request
+(
+    id int GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     description varchar(300),
     requestor_id int,
     created TIMESTAMP,
-    constraint fk_request_to_users foreign key (requestor_id) references users (id)
-    );
+    CONSTRAINT fk_request_to_users FOREIGN KEY (requestor_id) REFERENCES users (id)
+);
 
-create table if not exists items
-    (
-    id int generated always as identity primary key,
+CREATE TABLE IF NOT EXISTS items
+(
+    id int GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     name varchar(300),
     description varchar(300),
     is_available boolean,
     owner_id int,
     request_id int,
-    constraint fk_items_to_users foreign key (owner_id) references users (id) on delete cascade,
-    constraint fk_items_to_requestor foreign key (request_id) references request (id)
-    );
+    CONSTRAINT fk_items_to_users FOREIGN KEY (owner_id) REFERENCES users (id) ON DELETE CASCADE,
+    CONSTRAINT fk_items_to_requestor FOREIGN KEY (request_id) REFERENCES request (id)
+);
 
-CREATE TABLE if not exists booking
-    (
-    id int generated always as identity primary key,
+CREATE TABLE IF NOT EXISTS booking
+(
+    id int GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     start_time TIMESTAMP,
     end_time TIMESTAMP,
     booker_id int,
     item_id int,
     status varchar(20),
-    constraint fk_booking_to_users foreign key (booker_id) references users(id),
-    constraint fk_booking_to_items foreign key (item_id) references items (id)
-    );
+    CONSTRAINT fk_booking_to_users FOREIGN KEY (booker_id) REFERENCES users (id),
+    CONSTRAINT fk_booking_to_items FOREIGN KEY (item_id) REFERENCES items (id)
+);
 
-CREATE TABLE if not exists comments
-    (
-    id int generated always as identity primary key,
+CREATE TABLE IF NOT EXISTS comments
+(
+    id int GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     text varchar(320),
-    item_id   bigint,
+    item_id bigint,
     author_id bigint,
     created TIMESTAMP,
-    constraint fk_comments_to_items foreign key (item_id) references items(id),
-    constraint fk_comments_to_users foreign key (author_id) references users(id)
-    );
+    CONSTRAINT fk_comments_to_items FOREIGN KEY (item_id) REFERENCES items (id),
+    CONSTRAINT fk_comments_to_users FOREIGN KEY (author_id) REFERENCES users (id)
+);

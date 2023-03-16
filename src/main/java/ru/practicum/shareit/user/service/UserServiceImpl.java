@@ -45,11 +45,6 @@ public class UserServiceImpl implements UserService {
         return userRepository.findAll();
     }
 
-//    @Override
-//    public Optional<User> findUserByEmail(String email) {
-//        return userRepository.findByEmail(email);
-//    }
-
     private User updateUserIfExist(User user) {
         User updateUser = getById(user.getId());
         if (user.getEmail() != null) updateUser.setEmail(user.getEmail());
