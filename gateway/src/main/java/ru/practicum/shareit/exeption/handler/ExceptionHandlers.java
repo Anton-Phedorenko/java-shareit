@@ -31,4 +31,5 @@ public class ExceptionHandlers {
         log.info("Код ошибки 500");
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
+
 }

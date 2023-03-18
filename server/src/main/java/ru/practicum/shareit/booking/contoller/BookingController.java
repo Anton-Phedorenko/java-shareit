@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.booking.dto.BookingDtoInput;
 import ru.practicum.shareit.booking.dto.BookingDtoOutput;
 import ru.practicum.shareit.booking.service.dal.BookingService;
+import ru.practicum.shareit.exeption.exeptions.ValidationException;
 
 import java.util.List;
 
@@ -19,6 +20,10 @@ public class BookingController {
     @PostMapping
     public BookingDtoOutput create(@RequestHeader(USER_ID) Long userId,
                                    @RequestBody BookingDtoInput bookingDto) {
+        if (bookingDto.getStart().isEqual(bookingDto.getEnd())) {
+        throw new ValidationException("");
+        }
+
         return bookingService.create(bookingDto, userId);
     }
 
