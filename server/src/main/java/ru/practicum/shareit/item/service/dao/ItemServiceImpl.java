@@ -125,8 +125,8 @@ public class ItemServiceImpl implements ItemService {
         Clock clock = Clock.system(ZoneId.of("Europe/Moscow"));
         ItemDtoOutput itemDto = ItemMapper.toItemDto(item);
         LocalDateTime now = LocalDateTime.now(clock);
-        Booking lastBooking = getLastBooking(bookings, now);
-        Booking nextBooking = getNextBooking(bookings, now);
+        Booking lastBooking = getLastBooking(bookings,now);
+        Booking nextBooking = getNextBooking(bookings,now);
         ItemDtoOutput.Booking lastBookingNew = new ItemDtoOutput.Booking();
         ItemDtoOutput.Booking nextBookingNew = new ItemDtoOutput.Booking();
         if (lastBooking != null) {

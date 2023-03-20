@@ -10,7 +10,7 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQL10Dialect
         format_sql: true
   sql:
-    init: 
+    init:
       mode: always
   datasource:
     driver-class-name: org.postgresql.Driver
@@ -27,5 +27,4 @@ spring:
 #  config:
 #    activate:
 #      on-profile: ci,test,default
-#  spring.config.activate.on-profile
-
+#

@@ -9,4 +9,5 @@ public class ShareItGateway {
         SpringApplication.run(ShareItGateway.class, args);
     }
 
+
 }
