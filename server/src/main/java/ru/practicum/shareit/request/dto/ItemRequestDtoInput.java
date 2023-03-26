@@ -12,5 +12,5 @@ public class ItemRequestDtoInput {
     private Long id;
     private Long requestorId;
     private String description;
-    private LocalDateTime created = LocalDateTime.now();
+    private LocalDateTime created;
 }

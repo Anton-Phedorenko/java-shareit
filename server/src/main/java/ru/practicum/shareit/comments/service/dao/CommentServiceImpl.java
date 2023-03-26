@@ -39,6 +39,7 @@ public class CommentServiceImpl implements CommentService {
         Item item = itemService.getByIdForItem(itemId);
         List<Booking> bookings = getBookings(userId, itemId);
         if (bookings.size() != 0) {
+            commentDto.setCreated(LocalDateTime.now(ZoneId.of("Europe/Moscow")));
             Comment comment = commentRepository.save(CommentMapper.toComment(commentDto));
             comment.setAuthor(bookings.get(0).getBooker());
             comment.setItem(item);

@@ -133,7 +133,7 @@ public class BookingServiceImpl implements BookingService {
             case CURRENT:
                 bookings = bookingRepository.getAllByBookerCurrent(id,
                         LocalDateTime.now(clock).withNano(0),
-                        pageable);
+                        PageRequest.of(from > 0 ? from / size : 0, size, Sort.by("start")));
                 break;
             case PAST:
                 bookings = bookingRepository.getAllByBookerPast(id,
