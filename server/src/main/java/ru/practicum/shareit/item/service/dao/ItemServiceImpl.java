@@ -22,7 +22,6 @@ import ru.practicum.shareit.request.repository.RequestRepository;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.service.dal.UserService;
 
-import java.time.Clock;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
@@ -73,8 +72,7 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public ItemDtoOutput getById(Long itemId, Long ownerId) {
         userService.getById(ownerId);
-        List<Item> items = new ArrayList<>();
-        items.add(getByIdForItem(itemId));
+        List<Item> items = List.of(getByIdForItem(itemId));
         Map<Item, List<Booking>> approvedBookings = getApprovedBookings(items);
         Map<Item, List<Comment>> comments = getComments(items);
         if (items.get(0).getOwner().getId().equals(ownerId)) {
@@ -122,9 +120,8 @@ public class ItemServiceImpl implements ItemService {
     }
 
     private ItemDtoOutput appendBookingToItem(Item item, List<Booking> bookings) {
-        Clock clock = Clock.system(ZoneId.of("Europe/Moscow"));
         ItemDtoOutput itemDto = ItemMapper.toItemDto(item);
-        LocalDateTime now = LocalDateTime.now(clock);
+        LocalDateTime now = LocalDateTime.now(ZoneId.of("Europe/Moscow"));
         Booking lastBooking = getLastBooking(bookings, now);
         Booking nextBooking = getNextBooking(bookings, now);
         ItemDtoOutput.Booking lastBookingNew = new ItemDtoOutput.Booking();

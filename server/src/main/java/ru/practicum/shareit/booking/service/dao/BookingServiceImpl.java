@@ -47,7 +47,6 @@ public class BookingServiceImpl implements BookingService {
             booking.setBooker(user);
             booking.setItem(item);
             booking.setStatus(Status.WAITING);
-            System.out.println();
             if (item.getAvailable() && !booking.getStart().isAfter(booking.getEnd())) {
                 return getById(bookingRepository.save(booking).getId(), userId);
             } else {
@@ -133,7 +132,7 @@ public class BookingServiceImpl implements BookingService {
             case CURRENT:
                 bookings = bookingRepository.getAllByBookerCurrent(id,
                         LocalDateTime.now(clock).withNano(0),
-                        PageRequest.of(from > 0 ? from / size : 0, size, Sort.by("start")));
+                        pageable);
                 break;
             case PAST:
                 bookings = bookingRepository.getAllByBookerPast(id,

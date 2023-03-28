@@ -15,15 +15,16 @@ public class CommentMapper {
         Comment comment = new Comment();
         comment.setId(comment.getId());
         comment.setText(commentDto.getText());
-        comment.setCreated(commentDto.getCreated());
         return comment;
     }
 
     public static CommentDto toCommentDto(Comment comment) {
-        return new CommentDto(comment.getId(),
-                comment.getText(),
-                comment.getAuthor().getName(),
-                comment.getCreated());
+        return CommentDto
+                .builder()
+                .id(comment.getId())
+                .text(comment.getText())
+                .authorName(comment.getAuthor().getName())
+                .build();
     }
 
     public static ItemDtoOutput.Comment toItemComment(Comment comment) {

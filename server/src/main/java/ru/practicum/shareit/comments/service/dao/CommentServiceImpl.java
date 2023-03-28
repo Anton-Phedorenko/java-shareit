@@ -16,7 +16,6 @@ import ru.practicum.shareit.exeption.exeptions.ValidationException;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.service.dal.ItemService;
 
-import java.time.Clock;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.List;
@@ -39,11 +38,11 @@ public class CommentServiceImpl implements CommentService {
         Item item = itemService.getByIdForItem(itemId);
         List<Booking> bookings = getBookings(userId, itemId);
         if (bookings.size() != 0) {
-            commentDto.setCreated(LocalDateTime.now(ZoneId.of("Europe/Moscow")));
-            Comment comment = commentRepository.save(CommentMapper.toComment(commentDto));
+            Comment comment = CommentMapper.toComment(commentDto);
+            comment.setCreated(LocalDateTime.now(ZoneId.of("Europe/Moscow")));
             comment.setAuthor(bookings.get(0).getBooker());
             comment.setItem(item);
-            return CommentMapper.toCommentDto(comment);
+            return CommentMapper.toCommentDto(commentRepository.save(comment));
         } else {
             throw new ValidationException("Предмет не бронировался или ожидает бронирования");
         }
@@ -52,7 +51,7 @@ public class CommentServiceImpl implements CommentService {
     private List<Booking> getBookings(Long userId, Long itemId) {
         return bookingRepository.getAllByBookerPast(
                         userId,
-                        LocalDateTime.now(Clock.system(ZoneId.of("Europe/Moscow"))),
+                        LocalDateTime.now(ZoneId.of("Europe/Moscow")),
                         PageRequest.of(0, 100, Sort.by(DESC, "start")))
                 .stream()
                 .filter(b -> b.getItem().getId().equals(itemId))
