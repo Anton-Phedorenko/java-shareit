@@ -15,5 +15,5 @@ public class ItemRequestDtoInput {
     private Long requestorId;
     @NotBlank(groups = {Create.class})
     private String description;
-    private LocalDateTime created = LocalDateTime.now();
+    private LocalDateTime created;
 }
