@@ -17,7 +17,6 @@ import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.service.dal.ItemService;
 
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -39,7 +38,7 @@ public class CommentServiceImpl implements CommentService {
         List<Booking> bookings = getBookings(userId, itemId);
         if (bookings.size() != 0) {
             Comment comment = CommentMapper.toComment(commentDto);
-            comment.setCreated(LocalDateTime.now(ZoneId.of("Europe/Moscow")));
+            comment.setCreated(LocalDateTime.now());
             comment.setAuthor(bookings.get(0).getBooker());
             comment.setItem(item);
             return CommentMapper.toCommentDto(commentRepository.save(comment));
@@ -51,7 +50,7 @@ public class CommentServiceImpl implements CommentService {
     private List<Booking> getBookings(Long userId, Long itemId) {
         return bookingRepository.getAllByBookerPast(
                         userId,
-                        LocalDateTime.now(ZoneId.of("Europe/Moscow")),
+                        LocalDateTime.now(),
                         PageRequest.of(0, 100, Sort.by(DESC, "start")))
                 .stream()
                 .filter(b -> b.getItem().getId().equals(itemId))

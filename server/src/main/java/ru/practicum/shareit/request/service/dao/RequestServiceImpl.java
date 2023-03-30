@@ -18,7 +18,6 @@ import ru.practicum.shareit.request.service.dal.RequestService;
 import ru.practicum.shareit.user.service.dal.UserService;
 
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -42,7 +41,7 @@ public class RequestServiceImpl implements RequestService {
     public ItemRequestDtoOutput create(ItemRequestDtoInput itemRequestDto, Long userId) {
         ItemRequest itemRequest = RequestMapper.toRequest(itemRequestDto);
         itemRequest.setRequestor(userService.getById(userId));
-        itemRequest.setCreated(LocalDateTime.now(ZoneId.of("Europe/Moscow")));
+        itemRequest.setCreated(LocalDateTime.now());
         return RequestMapper.toRequestDto(requestRepository.save(itemRequest));
     }
 

@@ -23,7 +23,6 @@ import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.service.dal.UserService;
 
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -121,7 +120,7 @@ public class ItemServiceImpl implements ItemService {
 
     private ItemDtoOutput appendBookingToItem(Item item, List<Booking> bookings) {
         ItemDtoOutput itemDto = ItemMapper.toItemDto(item);
-        LocalDateTime now = LocalDateTime.now(ZoneId.of("Europe/Moscow"));
+        LocalDateTime now = LocalDateTime.now();
         Booking lastBooking = getLastBooking(bookings, now);
         Booking nextBooking = getNextBooking(bookings, now);
         ItemDtoOutput.Booking lastBookingNew = new ItemDtoOutput.Booking();

@@ -21,9 +21,7 @@ import ru.practicum.shareit.item.service.dal.ItemService;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.service.dal.UserService;
 
-import java.time.Clock;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.List;
 
 import static org.springframework.data.domain.Sort.Direction.DESC;
@@ -90,7 +88,6 @@ public class BookingServiceImpl implements BookingService {
     public List<BookingDtoOutput> getAllByOwner(Long id, String state, Integer from, Integer size) {
         userService.getById(id);
         Pageable pageable = PageRequest.of(from > 0 ? from / size : 0, size, Sort.by(DESC, "start"));
-        Clock clock = Clock.system(ZoneId.of("Europe/Moscow"));
         List<Booking> bookings = List.of();
         switch (State.States.getState(state)) {
             case ALL:
@@ -98,12 +95,12 @@ public class BookingServiceImpl implements BookingService {
                 break;
             case CURRENT:
                 bookings = bookingRepository.getAllByOwnerCurrent(id,
-                        LocalDateTime.now(clock).withNano(0),
+                        LocalDateTime.now().withNano(0),
                         pageable);
                 break;
             case PAST:
                 bookings = bookingRepository.getAllByOwnerPast(id,
-                        LocalDateTime.now(clock).withNano(0),
+                        LocalDateTime.now().withNano(0),
                         pageable);
                 break;
             case FUTURE:
@@ -122,7 +119,6 @@ public class BookingServiceImpl implements BookingService {
     @Override
     public List<BookingDtoOutput> getAllByBooker(Long id, String state, Integer from, Integer size) {
         userService.getById(id);
-        Clock clock = Clock.system(ZoneId.of("Europe/Moscow"));
         Pageable pageable = PageRequest.of(from > 0 ? from / size : 0, size, Sort.by(DESC, "start"));
         List<Booking> bookings = List.of();
         switch (State.States.getState(state)) {
@@ -131,12 +127,12 @@ public class BookingServiceImpl implements BookingService {
                 break;
             case CURRENT:
                 bookings = bookingRepository.getAllByBookerCurrent(id,
-                        LocalDateTime.now(clock).withNano(0),
+                        LocalDateTime.now().withNano(0),
                         pageable);
                 break;
             case PAST:
                 bookings = bookingRepository.getAllByBookerPast(id,
-                        LocalDateTime.now(clock).withNano(0),
+                        LocalDateTime.now().withNano(0),
                         pageable);
                 break;
             case FUTURE:
