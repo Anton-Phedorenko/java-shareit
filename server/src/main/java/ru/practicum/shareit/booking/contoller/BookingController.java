@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.booking.dto.BookingDtoInput;
 import ru.practicum.shareit.booking.dto.BookingDtoOutput;
 import ru.practicum.shareit.booking.service.dal.BookingService;
-import ru.practicum.shareit.exeption.exeptions.ValidationException;
+import ru.practicum.shareit.exeption.exeptions.BadRequestException;
 
 import java.util.List;
 
@@ -21,7 +21,7 @@ public class BookingController {
     public BookingDtoOutput create(@RequestHeader(USER_ID) Long userId,
                                    @RequestBody BookingDtoInput bookingDto) {
         if (bookingDto.getStart().isEqual(bookingDto.getEnd())) {
-        throw new ValidationException("");
+        throw new BadRequestException("");
         }
 
         return bookingService.create(bookingDto, userId);

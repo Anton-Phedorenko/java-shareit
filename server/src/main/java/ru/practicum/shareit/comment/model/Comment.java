@@ -1,4 +1,4 @@
-package ru.practicum.shareit.comments.model;
+package ru.practicum.shareit.comment.model;
 
 import lombok.Getter;
 import lombok.Setter;

@@ -1,4 +1,4 @@
-package ru.practicum.shareit.comments.dto;
+package ru.practicum.shareit.comment.dto;
 
 import lombok.*;
 

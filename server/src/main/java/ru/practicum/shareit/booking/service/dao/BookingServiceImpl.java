@@ -15,7 +15,7 @@ import ru.practicum.shareit.booking.service.dal.BookingService;
 import ru.practicum.shareit.booking.status.State;
 import ru.practicum.shareit.booking.status.Status;
 import ru.practicum.shareit.exeption.exeptions.ObjectExcistenceException;
-import ru.practicum.shareit.exeption.exeptions.ValidationException;
+import ru.practicum.shareit.exeption.exeptions.BadRequestException;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.service.dal.ItemService;
 import ru.practicum.shareit.user.model.User;
@@ -25,6 +25,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.springframework.data.domain.Sort.Direction.DESC;
+import static ru.practicum.shareit.booking.status.State.*;
+import static ru.practicum.shareit.booking.status.Status.APPROVED;
 
 @Service
 @RequiredArgsConstructor
@@ -48,7 +50,7 @@ public class BookingServiceImpl implements BookingService {
             if (item.getAvailable() && !booking.getStart().isAfter(booking.getEnd())) {
                 return getById(bookingRepository.save(booking).getId(), userId);
             } else {
-                throw new ValidationException("Вещь не доступна для аренды");
+                throw new BadRequestException("Вещь не доступна для аренды");
             }
         } else {
             throw new ObjectExcistenceException("Пользователь является владельцем");
@@ -61,12 +63,12 @@ public class BookingServiceImpl implements BookingService {
         userService.getById(userId);
         Booking booking = getByIdForBooking(bookingId);
         if (!userId.equals(booking.getBooker().getId())) {
-            if (approved && !booking.getStatus().equals(Status.APPROVED)) {
-                booking.setStatus(Status.APPROVED);
-            } else if (!approved && !booking.getStatus().equals(Status.REJECTED)) {
+            if (approved && !booking.getStatus().equals(APPROVED)) {
+                booking.setStatus(APPROVED);
+            } else if (!approved && !booking.getStatus().equals(REJECTED)) {
                 booking.setStatus(Status.REJECTED);
             } else {
-                throw new ValidationException("Сделка имеет такой статус");
+                throw new BadRequestException("Сделка имеет такой статус");
             }
             return getById(bookingId, userId);
         } else {

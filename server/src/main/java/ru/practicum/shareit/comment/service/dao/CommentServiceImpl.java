@@ -1,4 +1,4 @@
-package ru.practicum.shareit.comments.service.dao;
+package ru.practicum.shareit.comment.service.dao;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -7,12 +7,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.repository.BookingRepository;
-import ru.practicum.shareit.comments.dto.CommentDto;
-import ru.practicum.shareit.comments.mapper.CommentMapper;
-import ru.practicum.shareit.comments.model.Comment;
-import ru.practicum.shareit.comments.repository.CommentRepository;
-import ru.practicum.shareit.comments.service.dal.CommentService;
-import ru.practicum.shareit.exeption.exeptions.ValidationException;
+import ru.practicum.shareit.comment.dto.CommentDto;
+import ru.practicum.shareit.comment.repository.CommentRepository;
+import ru.practicum.shareit.comment.mapper.CommentMapper;
+import ru.practicum.shareit.comment.model.Comment;
+import ru.practicum.shareit.comment.service.dal.CommentService;
+import ru.practicum.shareit.exeption.exeptions.BadRequestException;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.service.dal.ItemService;
 
@@ -43,7 +43,7 @@ public class CommentServiceImpl implements CommentService {
             comment.setItem(item);
             return CommentMapper.toCommentDto(commentRepository.save(comment));
         } else {
-            throw new ValidationException("Предмет не бронировался или ожидает бронирования");
+            throw new BadRequestException("Предмет не бронировался или ожидает бронирования");
         }
     }
 

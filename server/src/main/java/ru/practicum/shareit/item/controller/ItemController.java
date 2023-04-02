@@ -2,8 +2,8 @@ package ru.practicum.shareit.item.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.shareit.comments.dto.CommentDto;
-import ru.practicum.shareit.comments.service.dal.CommentService;
+import ru.practicum.shareit.comment.dto.CommentDto;
+import ru.practicum.shareit.comment.service.dal.CommentService;
 import ru.practicum.shareit.item.dto.ItemDtoInput;
 import ru.practicum.shareit.item.dto.ItemDtoOutput;
 import ru.practicum.shareit.item.service.dal.ItemService;

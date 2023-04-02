@@ -1,6 +1,6 @@
-package ru.practicum.shareit.comments.service.dal;
+package ru.practicum.shareit.comment.service.dal;
 
-import ru.practicum.shareit.comments.dto.CommentDto;
+import ru.practicum.shareit.comment.dto.CommentDto;
 
 public interface CommentService {
     CommentDto create(CommentDto commentDto, Long itemId, Long userId);
